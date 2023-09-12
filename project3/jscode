@@ -1,0 +1,38 @@
+function getCountryData() {
+    const apiUrl = 'https://restcountries.com/v3.1/all';
+
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            // Get data for a random country from the API
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const country = data[randomIndex];
+
+            // Update the HTML with the country information
+            updateCountryInfo(country);
+        })
+        .catch((error) => {
+            // Handle network errors
+            displayError('An error occurred while fetching data');
+        });
+}
+
+function updateCountryInfo(country) {
+    const countryContainer = document.querySelector('.country-info');
+    countryContainer.innerHTML = `
+        <h2>${country.name.common}</h2>
+        <p>Capital: ${country.capital ? country.capital : 'N/A'}</p>
+        <p>Population: ${country.population ? country.population.toLocaleString() : 'N/A'}</p>
+        <p>Region: ${country.region ? country.region : 'N/A'}</p>
+        <p>Subregion: ${country.subregion ? country.subregion : 'N/A'}</p>
+        <p>Language: ${country.languages ? Object.values(country.languages).join(', ') : 'N/A'}</p>
+        <p>Currency: ${country.currencies ? Object.values(country.currencies).join(', ') : 'N/A'}</p>
+    `;
+}
+
+function displayError(message) {
+    const countryContainer = document.querySelector('.country-info');
+    countryContainer.innerHTML = `<p>${message}</p>`;
+}
+
+window.addEventListener('load', getCountryData);
