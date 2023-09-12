@@ -1,0 +1,42 @@
+
+function getRandomQuote() {
+    // API URL for Quotes Free API
+    const apiUrl = 'https://type.fit/api/quotes';
+
+    // Fetch data from the API
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            // Get a random quote from the API data
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const randomQuote = data[randomIndex];
+
+            // Update the HTML with the random quote
+            updateQuote(randomQuote.text, randomQuote.author);
+        })
+        .catch((error) => {
+            // Handle network errors
+            displayError('An error occurred while fetching data');
+        });
+}
+
+
+function updateQuote(quoteText, author) {
+    const quoteContainer = document.querySelector('.quote');
+    quoteContainer.innerHTML = `
+        <p>${quoteText}</p>
+        <p class="author">- ${author ? author : 'Unknown'}</p>
+    `;
+}
+
+
+function displayError(message) {
+    const quoteContainer = document.querySelector('.quote');
+    quoteContainer.innerHTML = `<p>${message}</p>`;
+}
+
+const newQuoteBtn = document.getElementById('new-quote-btn');
+newQuoteBtn.addEventListener('click', getRandomQuote);
+
+// Call the function to fetch and display a random quote when the page loads
+window.addEventListener('load', getRandomQuote);
